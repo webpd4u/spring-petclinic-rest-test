@@ -36,12 +36,10 @@ import javax.persistence.TemporalType;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.samples.petclinic.rest.JacksonCustomPetDeserializer;
-import org.springframework.samples.petclinic.rest.JacksonCustomPetSerializer;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Simple business object representing a pet.
@@ -52,8 +50,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */
 @Entity
 @Table(name = "pets")
-@JsonSerialize(using = JacksonCustomPetSerializer.class)
-@JsonDeserialize(using = JacksonCustomPetDeserializer.class)
+//@JsonSerialize(using = JacksonCustomPetSerializer.class)
+//@JsonDeserialize(using = JacksonCustomPetDeserializer.class)
 public class Pet extends NamedEntity {
 
     @Column(name = "birth_date")
@@ -64,11 +62,14 @@ public class Pet extends NamedEntity {
     @ManyToOne
     @JoinColumn(name = "type_id")
     private PetType type;
-
+    
+//    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private Owner owner;
-
+    
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
     private Set<Visit> visits;
 
